@@ -79,11 +79,39 @@
     <input type="button" id="shuffleDraw" value="shuffle, then draw" />
     <input type="button" id="orderByRank" value="order by rank" />
     <input type="button" id="orderBySuit" value="order by suit" />
+	<br />
+	<br />
+	<select onChange="updateSuit()" id="cardRank">
+		<option value="">Choose Rank</option>
+		<option value="Two">2</option>
+		<option value="Three">3</option>
+		<option value="Four">4</option>
+		<option value="Five">5</option>
+		<option value="Six">6</option>
+		<option value="Seven">7</option>
+		<option value="Eight">8</option>
+		<option value="Nine">9</option>
+		<option value="Ten">10</option>
+		<option value="Jack">J</option>
+		<option value="Queen">Q</option>
+		<option value="King">K</option>
+		<option value="Ace">A</option>
+		<option value="Joker">Joker</option>
+	</select>
+	<select id="cardSuit">
+		<option value="">Choose Suit</option>
+		<option value="Hearts">H</option>
+		<option value="Clubs">C</option>
+		<option value="Diamonds">D</option>
+		<option value="Spades">S</option>
+	</select>
+	<input type="button" id="removeCard" value="draw a specific card" />
+	
     <h2>Card Deck</h2>
     <div id="cardDeck"></div>
     <h2>Your Hand</h2>
     <div id="yourHand"></div>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="playingCards.js"></script>
     <script type="text/javascript" src="playingCards.ui.js"></script>
     <script type="text/javascript">
@@ -130,6 +158,27 @@
                 cardDeck.orderBySuit();
                 cardDeck.spread(); // update card table
             }
+			var doRemove = function(){
+				var rankElement = document.getElementById("cardRank");
+				var rank = rankElement.options[rankElement.selectedIndex].value;
+				
+				var suitElement = document.getElementById("cardSuit");
+				var suit = suitElement.options[suitElement.selectedIndex].value;
+				
+				var c = cardDeck.remove(rank, suit);
+				
+				if( c != null )
+				{
+					hand[hand.length] = c;
+					cardDeck.spread();
+					showHand();
+				}
+				else
+				{
+					alert('Card not found');
+				}
+			}
+			
             $('#shuffler').click(doShuffle);
             $('#draw').click(doDrawCard);
             $('#shuffleDraw').click(function(){
@@ -148,8 +197,23 @@
             });
             $('#orderByRank').click(doOrderByRank);
             $('#orderBySuit').click(doOrderBySuit);
+			$('#removeCard').click(doRemove);
 
         });
+		
+		function updateSuit(){
+			
+			var rank = document.getElementById("cardRank");
+			var suit = document.getElementById("cardSuit");
+			
+			if( rank.options[rank.selectedIndex].value == "Joker" ) {
+				suit.selectedIndex = "";
+				suit.disabled = true;	
+			}
+			else if ( suit.disabled == true ) {
+				suit.disabled = false;	
+			}
+		}
         /*
         // if we weren't using jquery to handle the document ready state, we would do this:
         if (window.addEventListener) {

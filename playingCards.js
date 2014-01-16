@@ -90,6 +90,34 @@ if (Array.indexOf === undefined) {
     playingCards.prototype.addCard = function(card) {
         this.cards.push(card);
     };
+	/**
+	 * remove a specific card using rank and suit
+	 */
+	playingCards.prototype.remove = function(rank, suit) {
+		
+		var l = this.cards.length,
+		i,
+		cardstring;
+		
+		if( !rank ) {
+			return null;
+		}
+		
+		if ( rank === "Joker" ) {
+			cardstring = rank;
+		}
+		else {
+			cardstring = rank + playingCards.defaults.ofString + suit;
+		}
+		
+		for ( i = 0; i < l; i++) {
+			if( this.cards[i].toString() === cardstring ) {
+				return this.cards.splice(i, 1)[0];
+			}
+		}
+		
+		return null;	
+	}
     /**
      * get the number of cards remaining in the deck
      * (easy enough just to call cardObject.cards.length but hey)
